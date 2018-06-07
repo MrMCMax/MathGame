@@ -1,0 +1,2 @@
+# MathGame
+Experimental Java calculator
