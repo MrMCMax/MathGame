@@ -1,0 +1,14 @@
+
+
+public class Complejo
+{
+    private Real a; //Re
+    private Real b; //Im
+    
+    public Complejo(Real re, Real im) {
+        a = re;
+        b = im;
+    }
+    
+    
+}

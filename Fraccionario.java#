@@ -1,0 +1,117 @@
+/**Se puede considerar a los números fraccionarios (Q) como el conjunto
+ * de los números racionales, pues los números enteros y naturales
+ * también están incluidos completamente en el conjunto de los fraccionarios.
+ */
+
+
+import mathExceptions.ExDivisionPorCero;
+
+public class Fraccionario extends Real
+{
+    private int numerador;
+    private int denominador;
+    
+    public Fraccionario(int num, int den) throws ExDivisionPorCero {
+        if (den == 0) {
+            throw new ExDivisionPorCero();
+        } else {
+            super.cambiarValor((double)num / den);
+            numerador = num;
+            denominador = den;
+            simplificar();
+        }
+    }
+    
+    public Fraccionario(Entero num, Entero den) throws ExDivisionPorCero {
+        this(num.getDiscreto(), den.getDiscreto());
+    }   //también funciona para naturales, pues discreto == absoluto en N 
+    
+    /**Este constructor SOLO lo usarán las clases derivadas (enteros y
+     * naturales) cuya representación como fraccionarios es n / 1, y
+     * que por tanto no tienen que comprobar la división por cero.
+     */
+    protected Fraccionario(int n) {
+        super(n);       //Actualiza numero, irracional y negativo
+        numerador = n;
+        denominador = 1;
+    }
+    
+    protected Fraccionario() {
+        super();        //Actualiza numero, irracional y negativo
+        numerador = 0;
+        denominador = 1;
+    }
+    
+    public Fraccionario mult(Fraccionario f) {
+        Fraccionario res;
+        try {
+            res = new Fraccionario(f.numerador * numerador,
+                f.denominador * denominador);
+        } catch (ExDivisionPorCero ex) {
+            return null;
+        }
+        return res;
+    }
+    
+    public Fraccionario div(Fraccionario f) throws ExDivisionPorCero {
+        Fraccionario inv = new Fraccionario(f.denominador, f.numerador);
+        return mult(inv);
+    }
+    
+    public Fraccionario sum(Fraccionario f) {
+        Fraccionario res = null;
+        if (denominador == f.denominador) {
+            try {
+                res = new Fraccionario(numerador + f.numerador, denominador);
+            } catch (ExDivisionPorCero ex) {}
+        } else {
+            int mcm = this.mcm(denominador, f.denominador);
+            int num1 = numerador * (mcm / denominador);
+            int num2 = f.numerador * (mcm / f.denominador);
+            try {
+                res = new Fraccionario(num1 + num2, mcm);
+            } catch(ExDivisionPorCero ex) {}
+        }
+        return res;
+    }
+    
+    public Fraccionario sub(Fraccionario f) {
+        return sum(f.mult(new Entero(-1)));
+    }
+    
+    public int getNumerador() {
+        return numerador;
+    }
+    
+    public int getDenominador() {
+        return denominador;
+    }
+    
+    /** Precondición: b != 0 
+     *  Algoritmo de Euclides
+     */
+    public static int mcd(int a, int b) {
+        if (a % b == 0) { return b; }
+        else {
+            int r = a % b;
+            do {
+                a = b;
+                b = r;
+                r = a % b;
+            } while(r != 0);
+            return b;
+        }
+    }
+    
+    /** Minimo comun multiplo, usa el algoritmo de Euclides */
+    public static int mcm(int a, int b) {
+        return ((a * b) / mcd(a, b));
+    }
+    
+    private void simplificar() {
+        int mcd = this.mcd(numerador, denominador);
+        numerador /= mcd;
+        denominador /= mcd;
+        cambiarValor((double)numerador / denominador);
+    }
+}

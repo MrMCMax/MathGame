@@ -1,0 +1,49 @@
+
+
+import mathExceptions.ExcepcionNegativo;
+import mathExceptions.ExDivisionPorCero;
+public class Entero extends Fraccionario
+{
+    protected int discreto;
+    
+    public Entero(int n) {
+        super(n);
+        discreto = n;
+    }
+    
+    /**Los constructores por defecto llaman a la superclase Real, que
+     * representa por defecto el 0. */
+    public Entero() {
+        super();
+        discreto = 0;
+    }
+    
+    public Entero sum(Entero k) {
+        return new Entero(discreto + k.discreto);
+    }
+    
+    public Entero sub(Entero k) {
+        return new Entero(discreto - k.discreto);
+    }
+    
+    public Entero mult(Entero k) {
+        return new Entero(discreto * k.discreto);
+    }
+    
+    public Fraccionario div(Entero k) throws ExDivisionPorCero {
+        return new Fraccionario(this, k);
+    }
+    
+    public int getDiscreto() { return discreto; }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Integer) {
+            return ((Integer)o).intValue() == discreto;
+        } else if (o instanceof Real) {
+            return ((Real)o).numero == discreto;
+        } else {
+            return false;
+        }
+    }
+}

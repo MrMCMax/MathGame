@@ -1,0 +1,64 @@
+/** Un número irracional será la raíz de un entero/fraccionario, o
+ *  alguno de los números trascendentales.
+ *  
+ *  Para representar las raíces irracionales, guardaremos el radicando
+ *  y el índice en variables. Solo los combinaremos cuando queramos
+ *  hacer una aproximación de su valor decimal. En cualquier otro caso,
+ *  utilizaremos las propiedades de las potencias para operar con ellos.
+ *  
+ *  El conjunto de los números irracionales NO está incluido en el conjunto de
+ *  los números naturales, enteros o fraccionarios. Estos son racionales (Q).
+ *  El conjunto de los racionales y el conjunto de los irracionales son
+ *  disjuntos. Los dos conforman el conjunto de los reales (R).
+ *  Es por esto que no extendemos la clase Natural.
+ */
+
+
+import mathExceptions.ExComplejo;
+import mathExceptions.ExNoIrracional;
+public class Irracional extends Real
+{
+
+    private Fraccionario radicando;
+    private Entero indice;
+
+    public Irracional(Fraccionario r, Entero i) throws ExComplejo, ExNoIrracional{
+        if (r.negativo && i.getDiscreto() % 2 == 0) {
+            throw new ExComplejo();
+        } else if (r.numero == 0 || i.numero == 0) {
+            throw new ExNoIrracional("Es 0 o 1");
+        } else {
+            irracional = true;
+            entero = false;
+            negativo = r.negativo;
+            
+            radicando = r;
+            indice = i;
+            transcendental = false;
+            calcularValor();
+            if (comprobarEntero()) {
+                throw new ExNoIrracional("Es raíz exacta");
+            }
+        }
+    }
+    
+    public Irracional(int r, int i) throws ExComplejo, ExNoIrracional {
+        this(new Entero(r), new Entero(i));
+    }
+
+    public int getIndice() { return indice.discreto; }
+    
+    
+    private void calcularValor() {
+        double intIndice = 1.0 / indice.numero;
+        numero = Math.pow(Math.abs(radicando.numero), intIndice);
+        if (radicando.negativo) {
+            numero = -1 * numero;
+        }
+    }
+    
+    /** Para comprobar si la raíz introducida es exacta o no */
+    private boolean comprobarEntero() {
+        return Math.abs(numero - Math.round(numero)) < 0.0000000001;
+    }
+}

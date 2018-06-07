@@ -1,0 +1,12 @@
+#BlueJ class context
+comment0.target=Fraccion
+comment1.params=num\ den
+comment1.target=Fraccion(numbers.Real,\ numbers.Real)
+comment2.params=
+comment2.target=void\ simplificar()
+comment3.params=
+comment3.target=boolean\ esFraccion()
+comment4.params=
+comment4.target=numbers.Real\ devolverNumero()
+comment4.text=Precondicion\:\ esFraccion()\ \=\=\ true
+numComments=5
